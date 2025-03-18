@@ -9,7 +9,7 @@ const ar = Cairo({
 })
 
 export const metadata: Metadata = {
-  title: "موقع التوظيف الجزائري",
+  title: "ecommers ",
   description: "اول موقع توظيف جزائري",
 };
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ar" dir="rtl">
       <body
         className={`${ar.className}`}
       >
