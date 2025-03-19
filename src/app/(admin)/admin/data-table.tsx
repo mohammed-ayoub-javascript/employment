@@ -35,48 +35,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-]
-
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+interface Product {
+  id?: number; 
+  name: string;
+  description: string;
+  images: string[]; 
+  price: string;
+  number: string;
+  status : string;
+  createdAt?: string;
+  updatedAt?: string;
 }
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -86,61 +56,82 @@ export const columns: ColumnDef<Payment>[] = [
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label="اختيار الكل"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label="اختيار سطر"
       />
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "الاسم",
+    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+  },
+  {
+    accessorKey: "description",
+    header: "الوصف",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="max-w-[200px] truncate">{row.getValue("description")}</div>
     ),
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "price",
+    header: () => <div className="text-right">السعر</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
+      const price = parseFloat(row.getValue("price"))
+      const formatted = new Intl.NumberFormat("ar-DZ", {
         style: "currency",
-        currency: "USD",
-      }).format(amount)
+        currency: "DZD",
+      }).format(price)
 
       return <div className="text-right font-medium">{formatted}</div>
     },
   },
   {
+    accessorKey: "status",
+    header: "الحالة",
+    cell: ({ row }) => (
+      <div className="capitalize px-2 py-1 rounded-full text-xs text-center"
+           style={{
+             backgroundColor: 
+               row.getValue("status") === 'active' ? '#dcfce7' :
+               row.getValue("status") === 'inactive' ? '#fee2e2' : '#fef9c3',
+             color: 
+               row.getValue("status") === 'active' ? '#166534' :
+               row.getValue("status") === 'inactive' ? '#991b1b' : '#854d0e'
+           }}>
+        {row.getValue("status")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "images",
+    header: "صور",
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        {(row.getValue("images") as string[]).slice(0, 3).map((img, index) => (
+          <img 
+            key={index}
+            src={img}
+            className="h-10 w-10 object-cover rounded"
+            alt={`Product image ${index + 1}`}
+          />
+        ))}
+      </div>
+    ),
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const product = row.original
 
       return (
         <DropdownMenu>
@@ -153,13 +144,14 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(product.id?.toString() || '')}
             >
-              Copy payment ID
+              Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View product details</DropdownMenuItem>
+            <DropdownMenuItem>Edit product</DropdownMenuItem>
+            <DropdownMenuItem>Delete product</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -167,7 +159,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
-export function DataTableDemo() {
+export function ProductTable({ data }: { data: Product[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -199,17 +191,17 @@ export function DataTableDemo() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="فلترة المنتجات"
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
+              السطر <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -276,7 +268,7 @@ export function DataTableDemo() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  لا يوجد منتج
                 </TableCell>
               </TableRow>
             )}
@@ -285,8 +277,8 @@ export function DataTableDemo() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} اختيار{" "}
+          {table.getFilteredRowModel().rows.length} عنصر من.
         </div>
         <div className="space-x-2">
           <Button
@@ -295,7 +287,7 @@ export function DataTableDemo() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            السابق
           </Button>
           <Button
             variant="outline"
@@ -303,7 +295,7 @@ export function DataTableDemo() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            التالي
           </Button>
         </div>
       </div>

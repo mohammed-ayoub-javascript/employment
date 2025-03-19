@@ -1,10 +1,39 @@
+"use client";
+
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartArea, Plus, ShoppingBag } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChartMainApp } from './chart'
-import { DataTableDemo } from './data-table'
-const AdminDashboard = async () => {
+
+import { getAllProducts } from '@/local/local-db';
+import { ProductTable } from './data-table';
+interface Product {
+  id?: number; 
+  name: string;
+  description: string;
+  images: string[]; 
+  price: string;
+  number: string;
+  status : string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+const AdminDashboard =  () => {
+  const [count , setCount] = useState(0);
+  const [data , setData]  = useState<Product[]>([])
+  useEffect(() =>  {
+    getAllProducts().then((res) => {
+      console.log(res);
+
+      setCount(res.length);
+      setData(res)
+      console.log(res);
+      
+      
+    })
+  } ,[])
   return (
     <div className=' w-full  flex justify-start items-start flex-col'>
       <div className=' w-full  flex justify-start items-start flex-row gap-4'>
@@ -18,7 +47,9 @@ const AdminDashboard = async () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <h1 className=' text-4xl font-extrabold'>0</h1>
+            <h1 className=' text-4xl font-extrabold'>
+              {count}
+            </h1>
           </CardContent>
           <CardFooter>
             <Button className=' w-full'>
@@ -68,7 +99,10 @@ const AdminDashboard = async () => {
 
       </div>
       <ChartMainApp />
-      <DataTableDemo />
+      {data.length > 0 &&
+      (
+      <ProductTable data={data}/>
+      )}
     </div>
   )
 }
