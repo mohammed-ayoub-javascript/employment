@@ -11,7 +11,7 @@ import {
     SidebarMenuItem,
   } from "@/components/ui/sidebar"
 import { options } from "@/lib/options"
-  import { Banknote, Bot, BotIcon, Calendar, ChartArea, Download, Home, Inbox, Search, Settings, ShoppingBag, Store, UserRoundPlus, UsersIcon } from "lucide-react"
+  import { Banknote, Bot, BotIcon, Calendar, ChartArea, ChartBarStacked, Download, Home, Inbox, Search, Settings, ShoppingBag, Store, UserRoundPlus, UsersIcon } from "lucide-react"
 import { getServerSession } from "next-auth"
 
   export async function AppSidebar() {
@@ -19,40 +19,45 @@ import { getServerSession } from "next-auth"
     const items = [
         {
           title: "الرئيسية",
-          url: "#",
+          url: "/admin",
           icon: Home,
         },
         {
           title: "المنتجات",
-          url: "#",
+          url: "/admin/products",
           icon: ShoppingBag,
         },
         {
           title: "العملاء",
-          url: "#",
+          url: "/admin/clients",
           icon: UsersIcon,
         },
         {
           title: "ادوات الذكاء الاصطناعي",
-          url: "#",
+          url: "/admin/ai",
           icon: Bot,
+        },
+        {
+          title:"التصنيفات",
+          url: "/admin/category",
+          icon: ChartBarStacked,
         },
       ]
 
       const items2 = [
         {
           title: "الارباح",
-          url: "#",
+          url: "/admin/money",
           icon:Banknote,
         },
         {
           title: "الزيارات",
-          url: "#",
+          url: "/admin/visters",
           icon: UserRoundPlus,
         },
         {
           title: "تحليل البيانات",
-          url: "#",
+          url: "/admin/anayle",
           icon: ChartArea,
         },
       ]
@@ -60,17 +65,17 @@ import { getServerSession } from "next-auth"
       const items3 = [
         {
           title: "متجري",
-          url: "#",
+          url: "/admin/my-website",
           icon: Store,
         },
         {
           title: "اعدادت",
-          url: "#",
+          url: "/admin/settings",
           icon: Settings,
         },
         {
           title: "تحديث المتجر",
-          url: "#",
+          url: "/admin/update",
           icon: Download,
         },
       ]

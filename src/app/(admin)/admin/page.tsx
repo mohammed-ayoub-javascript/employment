@@ -4,8 +4,7 @@ import { ChartArea, Plus, ShoppingBag } from 'lucide-react'
 import React from 'react'
 import { ChartMainApp } from './chart'
 import { DataTableDemo } from './data-table'
-
-const AdminDashboard = () => {
+const AdminDashboard = async () => {
   return (
     <div className=' w-full  flex justify-start items-start flex-col'>
       <div className=' w-full  flex justify-start items-start flex-row gap-4'>

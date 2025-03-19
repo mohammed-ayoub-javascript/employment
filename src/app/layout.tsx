@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {  Cairo} from "next/font/google";
 import "./globals.css";
+import { TRPCProvider } from "@/trpc/client";
 
 
 const ar = Cairo({
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body
         className={`${ar.className}`}
       >
-        {children}
+        <TRPCProvider>
+            {children}
+       </TRPCProvider>
       </body>
     </html>
   );
