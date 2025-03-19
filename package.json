@@ -54,6 +54,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
+    "dotted-map": "^2.2.3",
     "drizzle-kit": "^0.30.5",
     "drizzle-orm": "^0.40.1",
     "embla-carousel-react": "^8.5.2",
