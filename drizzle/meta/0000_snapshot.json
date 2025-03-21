@@ -43,17 +43,13 @@
       "compositePrimaryKeys": {
         "category_id": {
           "name": "category_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "category_name_unique": {
           "name": "category_name_unique",
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "checkConstraint": {}
@@ -97,9 +93,7 @@
       "compositePrimaryKeys": {
         "discount_id": {
           "name": "discount_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -187,12 +181,8 @@
           "name": "products_category_id_category_id_fk",
           "tableFrom": "products",
           "tableTo": "category",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -200,12 +190,8 @@
           "name": "products_discount_id_discount_id_fk",
           "tableFrom": "products",
           "tableTo": "discount",
-          "columnsFrom": [
-            "discount_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["discount_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -213,17 +199,13 @@
       "compositePrimaryKeys": {
         "products_id": {
           "name": "products_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "products_name_unique": {
           "name": "products_name_unique",
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "checkConstraint": {}
@@ -281,29 +263,21 @@
       "compositePrimaryKeys": {
         "admin_id": {
           "name": "admin_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "admin_username_unique": {
           "name": "admin_username_unique",
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         },
         "admin_email_unique": {
           "name": "admin_email_unique",
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "admin_image_unique": {
           "name": "admin_image_unique",
-          "columns": [
-            "image"
-          ]
+          "columns": ["image"]
         }
       },
       "checkConstraint": {}

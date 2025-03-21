@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import ButtonProduct from "./button-product";
 import { addProduct, getAllProducts } from "@/local/local-db";
+import { useRouter } from "next/navigation";
 
 interface Product {
   name: string;
@@ -19,18 +27,18 @@ interface Props {
 
 const ClientProducts: React.FC<Props> = ({ initialProducts }) => {
   const [products, setProducts] = useState<Product[]>([]);
-
+  const route = useRouter();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const localProducts : any = await getAllProducts();
+        const localProducts: any = await getAllProducts();
 
         if (localProducts.length > 0) {
           setProducts(localProducts);
           console.log("تم تحميل المنتجات من IndexedDB");
         } else {
           setProducts(initialProducts);
-          initialProducts.forEach(addProduct);
+          initialProducts.forEach(addProduct as any);
           console.log("تم تحميل المنتجات من backend وتخزينها محليًا");
         }
       } catch (error) {
@@ -58,11 +66,16 @@ const ClientProducts: React.FC<Props> = ({ initialProducts }) => {
             console.error("خطأ في تحليل الصور:", error);
           }
 
-          const imageUrl = images.length > 0 ? images[0] :"";
+          const imageUrl = images.length > 0 ? images[0] : "";
 
           return (
             <Card key={product.id}>
-              <CardHeader>
+              <CardHeader
+                className=" cursor-pointer"
+                onClick={() => {
+                  route.push(`product/${product.name}`);
+                }}
+              >
                 <CardTitle>{product.name}</CardTitle>
                 <CardDescription>
                   <img

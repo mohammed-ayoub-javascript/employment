@@ -1,110 +1,93 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ChartArea, Plus, ShoppingBag } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ChartMainApp } from "./chart";
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChartArea, Plus, ShoppingBag } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import { ChartMainApp } from './chart'
-
-import { getAllProducts } from '@/local/local-db';
-import { ProductTable } from './data-table';
+import { getAllProducts } from "@/local/local-db";
+import { ProductTable } from "./data-table";
 interface Product {
-  id?: number; 
+  id?: number;
   name: string;
   description: string;
-  images: string[]; 
+  images: string[];
   price: string;
   number: string;
-  status : string;
+  status: string;
   createdAt?: string;
   updatedAt?: string;
 }
-const AdminDashboard =  () => {
-  const [count , setCount] = useState(0);
-  const [data , setData]  = useState<Product[]>([])
-  useEffect(() =>  {
+const AdminDashboard = () => {
+  const [count, setCount] = useState(0);
+  const [data, setData] = useState<Product[]>([]);
+  useEffect(() => {
     getAllProducts().then((res) => {
       console.log(res);
 
       setCount(res.length);
-      setData(res)
+      setData(res);
       console.log(res);
-      
-      
-    })
-  } ,[])
+    });
+  }, []);
   return (
-    <div className=' w-full  flex justify-start items-start flex-col'>
-      <div className=' w-full  flex justify-start items-start flex-row gap-4'>
-        <Card className=' w-full'>
+    <div className=" w-full  flex justify-start items-start flex-col">
+      <div className=" w-full  flex justify-start items-start flex-row gap-4">
+        <Card className=" w-full">
           <CardHeader>
-            <CardTitle>
-              المنتجات 
-            </CardTitle>
-            <CardDescription>
-              المنتجات الموجودة في متجرك
-            </CardDescription>
+            <CardTitle>المنتجات</CardTitle>
+            <CardDescription>المنتجات الموجودة في متجرك</CardDescription>
           </CardHeader>
           <CardContent>
-            <h1 className=' text-4xl font-extrabold'>
-              {count}
-            </h1>
+            <h1 className=" text-4xl font-extrabold">{count}</h1>
           </CardContent>
           <CardFooter>
-            <Button className=' w-full'>
+            <Button className=" w-full">
               <Plus />
             </Button>
           </CardFooter>
         </Card>
 
-        <Card className=' w-full'>
+        <Card className=" w-full">
           <CardHeader>
-            <CardTitle>
-              الارباح 
-            </CardTitle>
-            <CardDescription>
-             الارباح لآخر 30 يوم
-            </CardDescription>
+            <CardTitle>الارباح</CardTitle>
+            <CardDescription>الارباح لآخر 30 يوم</CardDescription>
           </CardHeader>
           <CardContent>
-            <h1 className=' text-4xl font-extrabold'>0$</h1>
+            <h1 className=" text-4xl font-extrabold">0$</h1>
           </CardContent>
           <CardFooter>
-            <Button className=' w-full'>
-              <ChartArea />
-            </Button>
+          <p className=" text-red-500 text-sm">في الاصدار الاساسي لا يعمل حاليا</p>
+
           </CardFooter>
         </Card>
 
-
-        <Card className=' w-full'>
+        <Card className=" w-full">
           <CardHeader>
-            <CardTitle>
-              الزيارات 
-            </CardTitle>
-            <CardDescription>
-             الزيارات لآخر 30 يوم
-            </CardDescription>
+            <CardTitle>الزيارات</CardTitle>
+            <CardDescription>الزيارات لآخر 30 يوم</CardDescription>
           </CardHeader>
           <CardContent>
-            <h1 className=' text-4xl font-extrabold'>0</h1>
+            <h1 className=" text-4xl font-extrabold">0</h1>
           </CardContent>
           <CardFooter>
-            <Button className=' w-full'>
-              <ChartArea />
-            </Button>
+            <p className=" text-red-500 text-sm">في الاصدار الاساسي لا يعمل حاليا</p>
           </CardFooter>
         </Card>
 
       </div>
       <ChartMainApp />
-      {data.length > 0 &&
-      (
-      <ProductTable data={data}/>
-      )}
+      {data.length > 0 && <ProductTable data={data} />}
     </div>
-  )
-}
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;

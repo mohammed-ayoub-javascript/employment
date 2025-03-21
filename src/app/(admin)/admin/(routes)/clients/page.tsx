@@ -1,12 +1,13 @@
-import React from 'react'
-import { DataTableDemo } from './data-table'
+import React from "react";
+import { OrdersTable } from "./data-table";
 
 const Clients = () => {
   return (
     <div>
-        <DataTableDemo />
+      <OrdersTable />
     </div>
-  )
-}
 
-export default Clients
+  );
+};
+
+export default Clients;

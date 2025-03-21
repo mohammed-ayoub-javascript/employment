@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,11 +12,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -25,8 +25,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,15 +34,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import toast from "react-hot-toast";
 interface Product {
-  id?: number; 
+  id?: number;
   name: string;
   description: string;
-  images: string[]; 
+  images: string[];
   price: string;
   number: string;
-  status : string;
+  status: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -78,52 +79,46 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "description",
     header: "الوصف",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{row.getValue("description")}</div>
+      <div className="max-w-[200px] truncate">
+        {row.getValue("description")}
+      </div>
     ),
   },
   {
     accessorKey: "price",
     header: () => <div className="text-right">السعر</div>,
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"))
+      const price = parseFloat(row.getValue("price"));
       const formatted = new Intl.NumberFormat("ar-DZ", {
         style: "currency",
         currency: "DZD",
-      }).format(price)
+      }).format(price);
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
     accessorKey: "status",
     header: "الحالة",
     cell: ({ row }) => (
-      <div className="capitalize px-2 py-1 rounded-full text-xs text-center"
-           style={{
-             backgroundColor: 
-               row.getValue("status") === 'active' ? '#dcfce7' :
-               row.getValue("status") === 'inactive' ? '#fee2e2' : '#fef9c3',
-             color: 
-               row.getValue("status") === 'active' ? '#166534' :
-               row.getValue("status") === 'inactive' ? '#991b1b' : '#854d0e'
-           }}>
+      <div
+        className="capitalize px-2 py-1 rounded-full text-xs text-center"
+        style={{
+          backgroundColor:
+            row.getValue("status") === "active"
+              ? "#dcfce7"
+              : row.getValue("status") === "inactive"
+              ? "#fee2e2"
+              : "#fef9c3",
+          color:
+            row.getValue("status") === "active"
+              ? "#166534"
+              : row.getValue("status") === "inactive"
+              ? "#991b1b"
+              : "#854d0e",
+        }}
+      >
         {row.getValue("status")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "images",
-    header: "صور",
-    cell: ({ row }) => (
-      <div className="flex gap-2">
-        {(row.getValue("images") as string[]).slice(0, 3).map((img, index) => (
-          <img 
-            key={index}
-            src={img}
-            className="h-10 w-10 object-cover rounded"
-            alt={`Product image ${index + 1}`}
-          />
-        ))}
       </div>
     ),
   },
@@ -131,42 +126,53 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const product = row.original
+      const product = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">فتح الفائمة</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>اجراء</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id?.toString() || '')}
+              onClick={() =>
+               {
+                navigator.clipboard.writeText(product.id?.toString() || "") ;
+                toast.success("تم النسخ")
+               }
+              }
             >
-              Copy product ID
+             نسخ معرف المنتج
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View product details</DropdownMenuItem>
-            <DropdownMenuItem>Edit product</DropdownMenuItem>
-            <DropdownMenuItem>Delete product</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => {
+              location.href=`/product/${product.name}`
+            }}>صفحة المنتج</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => {
+              location.href= `/admin/products/edit-product/${product.id}`
+            }}>تعديل المنتج</DropdownMenuItem>
+            <DropdownMenuItem className=" text-red-500" onClick={() =>{
+              location.href = `/admin/products/delete-product/${product.id}`
+            }}>حذف المنتج</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function ProductTable({ data }: { data: Product[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+    [],
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -185,7 +191,7 @@ export function ProductTable({ data }: { data: Product[] }) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -220,7 +226,7 @@ export function ProductTable({ data }: { data: Product[] }) {
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -237,10 +243,10 @@ export function ProductTable({ data }: { data: Product[] }) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -256,7 +262,7 @@ export function ProductTable({ data }: { data: Product[] }) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -300,5 +306,5 @@ export function ProductTable({ data }: { data: Product[] }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
