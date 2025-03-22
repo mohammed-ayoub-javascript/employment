@@ -9,26 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartArea, Plus, ShoppingBag } from "lucide-react";
+import {  Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { ChartMainApp } from "./chart";
 
 import { getAllProducts } from "@/local/local-db";
 import { ProductTable } from "./data-table";
-interface Product {
-  id?: number;
-  name: string;
-  description: string;
-  images: string[];
-  price: string;
-  number: string;
-  status: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+
 const AdminDashboard = () => {
   const [count, setCount] = useState(0);
-  const [data, setData] = useState<Product[]>([]);
+  const [data, setData] = useState<any>([]);
   useEffect(() => {
     getAllProducts().then((res) => {
       console.log(res);

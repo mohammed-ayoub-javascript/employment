@@ -13,17 +13,22 @@ import ButtonProduct from "./button-product";
 import { addProduct, getAllProducts } from "@/local/local-db";
 import { useRouter } from "next/navigation";
 
-interface Product {
-  name: string;
-  images: string;
-  price: string;
-  id: string;
-  description: string;
-}
 
-interface Props {
+interface Product {
+  id?: number;
+  name: string;
+  description: string;
+  images: string[] | string;
+  price: string;
+  number: string;
+  status: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+interface Props  {
   initialProducts: Product[];
-}
+};
 
 const ClientProducts: React.FC<Props> = ({ initialProducts }) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,14 +36,14 @@ const ClientProducts: React.FC<Props> = ({ initialProducts }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const localProducts: any = await getAllProducts();
+        const localProducts = await getAllProducts();
 
         if (localProducts.length > 0) {
           setProducts(localProducts);
           console.log("تم تحميل المنتجات من IndexedDB");
         } else {
           setProducts(initialProducts);
-          initialProducts.forEach(addProduct as any);
+          initialProducts.forEach(addProduct);
           console.log("تم تحميل المنتجات من backend وتخزينها محليًا");
         }
       } catch (error) {

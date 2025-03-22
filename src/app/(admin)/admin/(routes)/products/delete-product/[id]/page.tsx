@@ -32,7 +32,9 @@ const DeleteProduct = ({ params }: { params: Promise<{ id: string }> }) => {
             toast.error("ادخل رمز المنتج صحيحا");
         }
 
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
+      
       toast.error('فشل في حذف المنتج');
     }
   };

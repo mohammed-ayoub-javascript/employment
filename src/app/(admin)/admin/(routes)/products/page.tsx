@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DataTableDemo } from "./data-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -23,7 +22,7 @@ const Products = () => {
     getAllProducts().then((res) => {
       console.log(res);
 
-      setData(res);
+      setData(res as any);
       console.log(res);
     });
   }, []);

@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import {  ChevronDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -38,7 +38,7 @@ import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/utils/trpc";
 export type OrderType = {
   id: number;
-  status: "pending" | "processing" | "delivered" | "cancelled";
+  status: "pending" | "processing" | "delivered" | "cancelled"; 
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -50,7 +50,8 @@ export type OrderType = {
     quantity: number;
     price: string;
   }>;
-  createdAt: Date;
+  createdAt: string;
+  updatedAt: string; 
 };
 
 export const columns: ColumnDef<OrderType>[] = [
@@ -81,12 +82,6 @@ export const columns: ColumnDef<OrderType>[] = [
     header: "الحالة",
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
-      const variant = {
-        pending: "secondary",
-        processing: "default",
-        delivered: "success",
-        cancelled: "destructive"
-      }[status];
 
       return <Badge>{status}</Badge>
     },
@@ -166,9 +161,9 @@ export function OrdersTable() {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const table = useReactTable({
-    data: orders || [],
-    columns,
+  const table = useReactTable<OrderType>({
+    data: orders || [] as any,
+    columns: columns as ColumnDef<OrderType>[],
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),

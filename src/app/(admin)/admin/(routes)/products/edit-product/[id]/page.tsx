@@ -59,7 +59,9 @@ const EditProject = ({ params }: { params: Promise<{ id: string }> }) => {
         
         const categories = await getAllCategories();
         setCategores(categories);
-      } catch (error) {
+      } catch (err) {
+        console.log(err);
+        
         toast.error("فشل في تحميل بيانات المنتج");
       }
     };
@@ -188,13 +190,27 @@ const EditProject = ({ params }: { params: Promise<{ id: string }> }) => {
         <CardContent className="p-4 prose max-w-none">
         <ReactMarkdown
   components={{
-    h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4" {...props} />,
-    h2: ({node, ...props}) => <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3" {...props} />,
-    p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
-    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4" {...props} />,
-    li: ({node, ...props}) => <li className="mb-2" {...props} />,
-    code: ({node, ...props}) => <code className="bg-gray-100 px-1 rounded-sm font-mono" {...props} />,
-    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-emerald-400 bg-gray-50 pl-4 italic text-gray-600 my-4" {...props} />,
+    h1: ({node, ...props}) => <h1 onLoad={() => {
+      console.log(node);
+    }} className="text-3xl font-bold text-gray-900 dark:text-white mb-4" {...props} />,
+    h2: ({node, ...props}) => <h2 onLoad={() => {
+      console.log(node);
+    }} className="text-2xl font-semibold text-gray-800 mt-6 mb-3" {...props} />,
+    p: ({node, ...props}) => <p onLoad={() => {
+      console.log(node);
+    }} className="text-gray-700 leading-relaxed mb-4" {...props} />,
+    ul: ({node, ...props}) => <ul onLoad={() => {
+      console.log(node);
+    }} className="list-disc pl-6 mb-4" {...props} />,
+    li: ({node, ...props}) => <li onLoad={() => {
+      console.log(node);
+    }} className="mb-2" {...props} />,
+    code: ({node, ...props}) => <code onLoad={() => {
+      console.log(node);
+    }} className="bg-gray-100 px-1 rounded-sm font-mono" {...props} />,
+    blockquote: ({node, ...props}) => <blockquote  onLoad={() => {
+      console.log(node);
+    }}className="border-l-4 border-emerald-400 bg-gray-50 pl-4 italic text-gray-600 my-4" {...props} />,
   }}
 >
   {formData.description}

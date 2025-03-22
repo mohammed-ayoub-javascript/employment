@@ -17,10 +17,12 @@ import ReactMarkdown from "react-markdown";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { addProduct, getAllCategories } from "@/local/local-db";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+
 interface Category {
   name: string;
 }
+
 const NewProductForm = () => {
   const [formData, setFormData] = useState({
     productName: "",
@@ -31,13 +33,12 @@ const NewProductForm = () => {
     category: "",
   });
   const mutation = trpc.addproduct.addProduct.useMutation();
-  const [categores, setCategores] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [productImages, setProductImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const [productImages, setProductImages] = useState<any[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<any[]>([]);
-
-  const handleInputChange = (e: React.FormEvent) => {
-    const { name, value }: any = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -51,15 +52,15 @@ const NewProductForm = () => {
     }));
   };
 
-  const handleImageChange = (e: any) => {
-    const files: any = Array.from(e.target.files);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []) as File[];
     setProductImages([...productImages, ...files]);
 
-    const previews = files.map((file: any) => URL.createObjectURL(file));
+    const previews = files.map((file: File) => URL.createObjectURL(file));
     setImagePreviews([...imagePreviews, ...previews]);
   };
 
-  const removeImage = (index: any) => {
+  const removeImage = (index: number) => {
     const newPreviews = [...imagePreviews];
     newPreviews.splice(index, 1);
     setImagePreviews(newPreviews);
@@ -87,7 +88,7 @@ const NewProductForm = () => {
 
     try {
       const imagesBase64 = await Promise.all(
-        productImages.map((file) => {
+        productImages.map((file: File) => {
           return new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result as string);
@@ -119,7 +120,7 @@ const NewProductForm = () => {
         }),
       );
 
-      const filteredImageUrls = imageUrls.filter((url) => url !== null);
+      const filteredImageUrls = imageUrls.filter((url): url is string => url !== null);
 
       const result = await mutation.mutateAsync({
         productName: formData.productName,
@@ -131,11 +132,11 @@ const NewProductForm = () => {
         images: filteredImageUrls,
       });
 
-      if (result.success == false) {
+      if (!result.success) {
         toast.error(result.message);
-
-        return 0;
+        return;
       }
+      
       await addProduct({
         name: formData.productName,
         description: formData.description,
@@ -159,12 +160,13 @@ const NewProductForm = () => {
       toast.success(result.message);
     } catch (error) {
       console.error("فشل في إضافة المنتج:", error);
-      toast.error("حدث خطأ أثناء إضافة المنتج: " + (error as Error).message);
+      toast.error(`حدث خطأ أثناء إضافة المنتج: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
+
   useEffect(() => {
     getAllCategories().then((res) => {
-      setCategores(res);
+      setCategories(res);
     });
   }, []);
   return (
@@ -189,13 +191,13 @@ const NewProductForm = () => {
 <Card>
 <ReactMarkdown
   components={{
-    h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4" {...props} />,
-    h2: ({node, ...props}) => <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3" {...props} />,
-    p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
-    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4" {...props} />,
-    li: ({node, ...props}) => <li className="mb-2" {...props} />,
-    code: ({node, ...props}) => <code className="bg-gray-100 px-1 rounded-sm font-mono" {...props} />,
-    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-emerald-400 bg-gray-50 pl-4 italic text-gray-600 my-4" {...props} />,
+    h1: ({ ...props }) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4" {...props} />,
+    h2: ({ ...props }) => <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3" {...props} />,
+    p: ({ ...props }) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
+    ul: ({ ...props }) => <ul className="list-disc pl-6 mb-4" {...props} />,
+    li: ({ ...props }) => <li className="mb-2" {...props} />,
+    code: ({ ...props }) => <code className="bg-gray-100 px-1 rounded-sm font-mono" {...props} />,
+    blockquote: ({ ...props }) => <blockquote className="border-l-4 border-emerald-400 bg-gray-50 pl-4 italic text-gray-600 my-4" {...props} />,
   }}
 >
   {formData.description}
@@ -226,7 +228,7 @@ const NewProductForm = () => {
           <SelectValue placeholder="اختر القسم" />
         </SelectTrigger>
         <SelectContent>
-          {categores.map((item) => (
+          {categories.map((item) => (
             <SelectItem value={item.name} key={item.name}>
               {item.name}
             </SelectItem>

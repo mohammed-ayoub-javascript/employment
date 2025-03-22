@@ -1,37 +1,28 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { options } from "@/lib/options";
 import {
   Banknote,
   Bot,
-  BotIcon,
-  Calendar,
   ChartArea,
   ChartBarStacked,
   Download,
   Home,
-  Inbox,
-  Search,
   Settings,
   ShoppingBag,
   Store,
   UserRoundPlus,
   UsersIcon,
 } from "lucide-react";
-import { getServerSession } from "next-auth";
 
 export async function AppSidebar() {
-  const user = await getServerSession(options);
   const items = [
     {
       title: "الرئيسية",

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import React from "react";
 import { WorldMapDemo } from "./world-map-demo";
 

@@ -3,6 +3,16 @@ import { procedure, router } from "@/trpc/trpc";
 import { products, category } from "@/db/schema";
 import db from "@/db";
 import { eq } from "drizzle-orm";
+interface ProductUpdateData {
+  updatedAt: string;
+  name?: string;
+  description?: string;
+  price?: string;
+  number?: string;
+  status?: "available" | "unavailable";
+  images?: string;
+  categoryId?: number;
+}
 
 export const productRouter = router({
   addProduct: procedure
@@ -67,10 +77,9 @@ export const productRouter = router({
 )
 .mutation(async ({ input }) => {
   try {
-    const updateData: Record<string, any> = {
+    const updateData: ProductUpdateData = {
       updatedAt: new Date().toISOString()
     };
-
     const existingProduct = await db
       .select()
       .from(products)

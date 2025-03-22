@@ -41,7 +41,6 @@ import {
   User,
   MapPin,
   Phone,
-  Info,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 interface CartItem {
@@ -62,28 +61,31 @@ interface Commune {
   wilaya_id : string;
   ar_name : string;
 }
+interface ProductMap {
+  productId: number; 
+  quantity: number;
+  price: string;
+}
 interface Order {
   commune: string;
-  createdAt : string;
-  updatedAt : string;
-  firstName  : string;
-  lastName : string;
-  phoneNumber : string;
-  products : string[];
-  userId : string;
-  wilaya : string
-
+  createdAt: string;
+  updatedAt: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  products: ProductMap[];
+  userId: number;
+  wilaya: string;
+  status: string;
 }
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [communeData, setCommuneData] = useState(commune.slice(0, 50));
-  const [isLoading, setIsLoading] = useState(false);
   const [wilayav, setWilaya] = useState("");
   const [filteredCommunes, setFilteredCommunes] = useState<Commune[]>([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [orders , setOrders] = useState<Order[] | any>()
+  const [orders, setOrders] = useState<Order[]>([])
   const [selectedCommune, setSelectedCommune] = useState("");
   const router = useRouter();
   const [isCreatingOrder , setisCreatingOrder] = useState(false);
@@ -99,7 +101,7 @@ const Cart = () => {
       return;
     }
 
-    const orderData = {
+    const orderData : any= {
       userId: 1,
       products: cartItems.map(item => ({
         productId: item.id,
@@ -112,16 +114,17 @@ const Cart = () => {
       phoneNumber,
       wilaya: wilayaOptions.find(w => w.value === wilayav)?.label || '',
       commune: selectedCommune,
+      status: "pending",
     };
     console.log(orderData);
     
 
-    createOrder(orderData, {
+    createOrder(orderData as any, {
       onSuccess: () => {
         toast.success("تم إنشاء الطلب بنجاح");
         localStorage.removeItem("cart");
         setisCreatingOrder(false);
-        addOrder(orderData as any);
+        addOrder(orderData);
         router.refresh();
       },
       onError: () => {
@@ -157,18 +160,7 @@ const Cart = () => {
       })),
     [],
   );
-  const loadMore = () => {
-    if (!isLoading) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setCommuneData((prev) => [
-          ...prev,
-          ...commune.slice(prev.length, prev.length + 50),
-        ]);
-        setIsLoading(false);
-      }, 500);
-    }
-  };
+
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
@@ -219,7 +211,7 @@ const Cart = () => {
 
   useEffect(() => {
     getAllOrders().then((res) => {
-      setOrders(res);
+      setOrders(res as any);
     })
   } , [])
 
@@ -495,7 +487,7 @@ const Cart = () => {
                 <div className="space-y-2">
                   <h4 className="font-medium">المنتجات المطلوبة</h4>
                   <ul className="list-disc pr-4 space-y-1">
-                    {item.products.map((product: any, index: number) => (
+                    {item.products.map((product : ProductMap , index) => (
                       <li 
                         key={index} 
                         className="text-sm text-muted-foreground flex justify-between"
@@ -515,10 +507,10 @@ const Cart = () => {
               <div className="flex justify-between items-center pt-2">
                 <span className="font-medium">المجموع الكلي:</span>
                 <span className="font-bold text-lg">
-                  {item.products
-                    .reduce((acc: number, product: any) => 
-                      acc + (product.quantity * parseFloat(product.price)), 0)
-                    .toLocaleString()} د.ج
+                {item.products
+  .reduce((acc: number, product: ProductMap) => 
+    acc + (product.quantity * parseFloat(product.price)), 0)
+  .toLocaleString()} د.ج
                 </span>
               </div>
             </CardContent>

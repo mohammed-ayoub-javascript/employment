@@ -3,13 +3,20 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
+
 interface Product {
+  id?: number;
   name: string;
-  images: string;
-  price: string;
-  id: string;
   description: string;
+  images: string[] | string ; 
+  price: string;
+  number: string;
+  status: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+
 
 const ButtonProduct = ({ product }: { product: Product }) => {
   const [isInCart, setIsInCart] = useState(false);

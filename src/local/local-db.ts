@@ -5,7 +5,7 @@ interface Product {
   id?: number;
   name: string;
   description: string;
-  images: string[] | string; 
+  images: string[] | string ; 
   price: string;
   number: string;
   status: string;

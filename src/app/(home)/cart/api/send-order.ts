@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { procedure, router } from "@/trpc/trpc";
-import { orders, usersTable } from "@/db/schema";
+import { orders } from "@/db/schema";
 import db from "@/db";
-import { eq } from "drizzle-orm";
 
 export const orderRouter = router({
   addNewOrder: procedure

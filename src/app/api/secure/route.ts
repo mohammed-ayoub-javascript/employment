@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import { options } from "@/lib/options";
 import { getServerSession } from "next-auth";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 const hashedEmail = process.env.ADMIN;
 
-export async function POST(req: NextRequest) {
+export async function POST() {
     try {
         const user = await getServerSession(options);
         if (!user || !user.user?.email) {

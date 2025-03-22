@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Carousel,
@@ -9,10 +8,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { getProductByName } from "@/local/local-db";
-import React, { use, useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import ButtonProduct from "@/modules/ui/home/components/products/client/button-product";
 import ReactMarkdown from "react-markdown";
 
@@ -20,46 +17,35 @@ interface Product {
   id?: number;
   name: string;
   description: string;
-  images: string[] | string; 
+  images: string[] | string;
   price: string;
   number: string;
   status: string;
   createdAt?: string;
-  updatedAt?: string;
-}
-interface ProductPageProps {
-  params: {
-    id: string;
-  };
-}
-interface ProductProps {
-  name: string;
-  images: string;
-  price: string;
-  id: string;
-  description: string;
+  updatedAt?: string ;
 }
 
 
 
-const ProductPage = ({ params }: ProductPageProps) => {
-  const resolvedParams: any = use(params as any);
-  const decodedId = decodeURIComponent(resolvedParams.id);
-  const [product, setProduct] = useState<Product | any>(null);
+const ProductPage = ({ params } : any) => {
+  const decodedId = decodeURIComponent(params.id);
+  const [product, setProduct] = useState<Product | null |any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const productData : any = await getProductByName(decodedId);
+        const productData : any= await getProductByName(decodedId);
         if (productData) {
           let imagesArray: string[] = [];
           try {
-            const cleanedString = productData.images.replace(/\\/g, '');
-            imagesArray = JSON.parse(cleanedString);
+            if(product?.images){
+           const cleanedString = productData?.images.replace(/\\/g, '');
+            imagesArray = JSON.parse(cleanedString);              
+            }
           } catch (error) {
             console.error('Error parsing images:', error);
-            imagesArray = [productData.images]; 
+            imagesArray = [productData.images as string];
           }
           
           setProduct({
@@ -104,7 +90,7 @@ const ProductPage = ({ params }: ProductPageProps) => {
         <div className="space-y-4">
           <Carousel className="w-full">
             <CarouselContent>
-              {product.images.map((image : string, index : string) => (
+              {product.images.map((image: string, index: number) => (
                 <CarouselItem key={index}>
                   <div className="relative aspect-square rounded-xl overflow-hidden">
                     <img
@@ -122,7 +108,7 @@ const ProductPage = ({ params }: ProductPageProps) => {
           </Carousel>
 
           <div className="grid grid-cols-4 gap-2">
-            {product.images.map((image : string, index : string) => (
+            {product.images.map((image: string, index: number) => (
               <div
                 key={index}
                 className="relative aspect-square rounded-md overflow-hidden border"
@@ -157,22 +143,35 @@ const ProductPage = ({ params }: ProductPageProps) => {
           </div>
           <ReactMarkdown
   components={{
-    h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4" {...props} />,
-    h2: ({node, ...props}) => <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3" {...props} />,
-    p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
-    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4" {...props} />,
-    li: ({node, ...props}) => <li className="mb-2" {...props} />,
-    code: ({node, ...props}) => <code className="bg-gray-100 px-1 rounded-sm font-mono" {...props} />,
-    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-emerald-400 bg-gray-50 pl-4 italic text-gray-600 my-4" {...props} />,
+    h1: ({ ...props }) => (
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4" {...props} />
+    ),
+    h2: ({ ...props }) => (
+      <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3" {...props} />
+    ),
+    p: ({ ...props }) => (
+      <p className="text-gray-700 leading-relaxed mb-4" {...props} />
+    ),
+    ul: ({ ...props }) => (
+      <ul className="list-disc pl-6 mb-4" {...props} />
+    ),
+    li: ({ ...props }) => (
+      <li className="mb-2" {...props} />
+    ),
+    code: ({ ...props }) => (
+      <code className="bg-gray-100 px-1 rounded-sm font-mono" {...props} />
+    ),
+    blockquote: ({ ...props }) => (
+      <blockquote className="border-l-4 border-emerald-400 bg-gray-50 pl-4 italic text-gray-600 my-4" {...props} />
+    ),
   }}
 >
   {product.description}
 </ReactMarkdown>
-         
 
           <div className="flex flex-col space-y-4">
             <div className="flex items-center space-x-4">
-              <ButtonProduct product={product as any} />
+              <ButtonProduct product={product} />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
