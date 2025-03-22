@@ -12,30 +12,18 @@ export const usersTable = mysqlTable("admin", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   image: varchar("image", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" })
-    .defaultNow()
-    .onUpdateNow()
-    .notNull(),
 });
 
 export const category = mysqlTable("category", {
   id: int("id").notNull().primaryKey().autoincrement(),
   name: varchar("name", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" })
-    .defaultNow()
-    .onUpdateNow()
-    .notNull(),
 });
 
 export const discount = mysqlTable("discount", {
   id: int("id").notNull().primaryKey().autoincrement(),
   percentage: int("percentage").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" })
-    .defaultNow()
-    .onUpdateNow()
-    .notNull(),
 });
 
 export const products = mysqlTable("products", {
@@ -52,10 +40,6 @@ export const products = mysqlTable("products", {
   price: varchar("price", { length: 255 }).notNull(),
   number: varchar("number", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" })
-    .defaultNow()
-    .onUpdateNow()
-    .notNull(),
 });
 
 
@@ -76,8 +60,4 @@ export const orders = mysqlTable("orders", {
   wilaya: varchar("wilaya", { length: 255 }).notNull(),
   commune: varchar("commune", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" })
-    .defaultNow()
-    .onUpdateNow()
-    .notNull(),
 });
