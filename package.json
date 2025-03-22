@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "npm install --force && next build"
   },
   "dependencies": {
     "-": "^0.0.1",
