@@ -4,7 +4,6 @@ import { products, category } from "@/db/schema";
 import db from "@/db";
 import { eq } from "drizzle-orm";
 interface ProductUpdateData {
-  updatedAt: string;
   name?: string;
   description?: string;
   price?: string;
@@ -49,7 +48,6 @@ export const productRouter = router({
           categoryId: categoryId,
           images: JSON.stringify(input.images || []),
           createdAt: new Date(),
-          updatedAt: new Date().toISOString(),
         });
 
         return {
@@ -77,9 +75,7 @@ export const productRouter = router({
 )
 .mutation(async ({ input }) => {
   try {
-    const updateData: ProductUpdateData = {
-      updatedAt: new Date().toISOString()
-    };
+    const updateData: ProductUpdateData = {};
     const existingProduct = await db
       .select()
       .from(products)

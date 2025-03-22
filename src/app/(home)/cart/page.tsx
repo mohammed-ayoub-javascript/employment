@@ -69,7 +69,6 @@ interface ProductMap {
 interface Order {
   commune: string;
   createdAt: string;
-  updatedAt: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;

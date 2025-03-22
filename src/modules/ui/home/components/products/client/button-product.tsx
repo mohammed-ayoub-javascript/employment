@@ -13,7 +13,6 @@ interface Product {
   number: string;
   status: string;
   createdAt?: string;
-  updatedAt?: string;
 }
 
 

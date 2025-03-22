@@ -45,7 +45,6 @@ interface Product {
   number: string;
   status: string;
   createdAt?: string;
-  updatedAt?: string;
 }
 export const columns: ColumnDef<Product>[] = [
   {

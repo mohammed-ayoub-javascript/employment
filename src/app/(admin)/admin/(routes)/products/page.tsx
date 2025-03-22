@@ -14,7 +14,6 @@ interface Product {
   number: string;
   status: string;
   createdAt?: string;
-  updatedAt?: string;
 }
 const Products = () => {
   const [data, setData] = useState<Product[]>([]);
